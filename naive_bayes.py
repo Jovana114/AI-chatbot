@@ -1,99 +1,8 @@
-import pandas as pd
-
-# importing data
-
-mydata = pd.read_csv("D:/faks/3/2/ORI/Projekat/Emotions.csv", encoding="ISO-8859-1", on_bad_lines='skip' )
-mydata = mydata.dropna();
-
-# data - text preprocessing
-
-# punctuation removal
-import string
-string.punctuation
-
-# defining the function
-def remove_punctuation(text):
-    punctuationfree="".join([i for i in text if i not in string.punctuation])
-    return punctuationfree
-
-# applying the function
-mydata['Statement']= mydata['Statement'].apply(lambda x:remove_punctuation(x))
-
-# lowering the text
-
-mydata['Statement']= mydata['Statement'].apply(lambda x: x.lower())
-
-# tokenization
-
-# defining the function
+from preprocessing_data import mydata
 import nltk
-def tokenization(text):
-    tokens = nltk.word_tokenize(text)
-    return tokens
-
-# applying the function
-mydata['Statement']= mydata['Statement'].apply(lambda x: tokenization(x))
-
-
-# stopwords present in the library
-stopwords = nltk.corpus.stopwords.words('english')
-
-# defining the function
-def remove_stopwords(text):
-    output= [i for i in text if i not in stopwords]
-    return output
-
-# applying the function
-mydata['Statement']= mydata['Statement'].apply(lambda x:remove_stopwords(x))
-
-# removing digits
-
-# defining the function
-def remove_digits(text):
-    output= [i for i in text if not i.isdigit()]
-    return output
-
-# applying the function
-mydata['Statement'] = mydata['Statement'].apply(lambda x: remove_digits(x))
-
-# stemming
-
-# importing the Stemming function from nltk library
-from nltk.stem.porter import PorterStemmer
-
-# defining the object for stemming
-porter_stemmer = PorterStemmer()
-
-# defining the function
-def stemming(text):
-    stem_text = [porter_stemmer.stem(word) for word in text]
-    return stem_text
-
-# applying the function
-mydata['Statement']=mydata['Statement'].apply(lambda x: stemming(x))
-
-# lemmatization
-
-from nltk.stem import WordNetLemmatizer
-
-# defining the object for Lemmatization
-wordnet_lemmatizer = WordNetLemmatizer()
-
-# defining the function
-def lemmatizer(text):
-    lemm_text = [wordnet_lemmatizer.lemmatize(word) for word in text]
-    return lemm_text
-
-# applying the function
-mydata['Statement']=mydata['Statement'].apply(lambda x:lemmatizer(x))
-
-
-
-
-
-# naive bayes
-
+import pandas as pd
 from nltk.stem.lancaster import LancasterStemmer
+
 stemmer= LancasterStemmer()
 
 mydata = mydata.dropna()
@@ -144,7 +53,6 @@ def calculate_score(user_input, class_name):
      return score
 
 def translate(user_input):
-    
     emotion = []
     calculated_score = []
     for r in class_w.keys():
